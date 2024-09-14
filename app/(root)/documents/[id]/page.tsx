@@ -1,5 +1,5 @@
-import { Editor } from "@/components/editor/Editor";
 import Header from "@/components/header";
+import { Editor } from "@/components/editor/Editor";
 
 const Document = () => {
   return (
