@@ -4,6 +4,7 @@ import { nanoid } from "nanoid";
 import { revalidatePath } from "next/cache";
 
 import { liveblocks } from "@/lib/liveblocks";
+
 import { parseStringify } from "../utils";
 
 export const createDocument = async ({
@@ -55,5 +56,20 @@ export const getDocument = async ({
     return parseStringify(room);
   } catch (error) {
     console.log(`Error happened while getting a room: ${error}`);
+  }
+};
+
+export const updateDocument = async (roomId: string, title: string) => {
+  try {
+    const updatedRoom = await liveblocks.updateRoom(roomId, {
+      metadata: {
+        title,
+      },
+    });
+
+    revalidatePath(`/documents/${roomId}`);
+    return parseStringify(updatedRoom);
+  } catch (error) {
+    console.log(`Error happened while updating a room: ${error}`);
   }
 };
