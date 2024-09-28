@@ -16,9 +16,9 @@ import ActiveCollaborators from "./activeCollaborators";
 const CollaborativeRoom = ({
   roomId,
   roomMetadata,
+  users,
+  currentUserType,
 }: CollaborativeRoomProps) => {
-  const currentUserType = "editor";
-
   const [editing, setEditing] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [documentTitle, setDocumentTitle] = React.useState(roomMetadata.title);
@@ -125,7 +125,7 @@ const CollaborativeRoom = ({
               </SignedIn>
             </div>
           </Header>
-          <Editor />
+          <Editor roomId={roomId} currentUserType={currentUserType} />
         </div>
       </ClientSideSuspense>
     </RoomProvider>
