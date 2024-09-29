@@ -1,16 +1,24 @@
 "use client";
 import Theme from "./plugins/Theme";
-import ToolbarPlugin from "./plugins/ToolbarPlugin";
 import { HeadingNode } from "@lexical/rich-text";
-import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
+import ToolbarPlugin from "./plugins/ToolbarPlugin";
+import { useThreads } from "@liveblocks/react/suspense";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
-import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 
-import { liveblocksConfig, useEditorStatus } from "@liveblocks/react-lexical";
+import {
+  FloatingComposer,
+  FloatingThreads,
+  liveblocksConfig,
+  LiveblocksPlugin,
+  useEditorStatus,
+} from "@liveblocks/react-lexical";
 import Loader from "../loader";
+import FloatingToolbar from "./plugins/FloatingToolbarPlugin";
 
 // Catch any errors that occur during Lexical updates and log them
 // or throw them as needed. If you don't throw them, Lexical will
@@ -28,6 +36,7 @@ export function Editor({
   currentUserType: UserType;
 }) {
   const status = useEditorStatus();
+  const { threads } = useThreads();
 
   const initialConfig = liveblocksConfig({
     namespace: "Editor",
@@ -59,10 +68,16 @@ export function Editor({
                 placeholder={<Placeholder />}
                 ErrorBoundary={LexicalErrorBoundary}
               />
+              {currentUserType === "editor" && <FloatingToolbar />}
               <HistoryPlugin />
               <AutoFocusPlugin />
             </div>
           )}
+
+          <LiveblocksPlugin>
+            <FloatingComposer className="w-[350px]" />
+            <FloatingThreads threads={threads} />
+          </LiveblocksPlugin>
         </div>
       </div>
     </LexicalComposer>
