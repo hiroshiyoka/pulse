@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs/server";
 
 import { getDocument } from "@/lib/actions/room.actions";
+import { getClerkUsers } from "@/lib/actions/user.actions";
 import CollaborativeRoom from "@/components/collaborativeRoom";
 
 const Document = async ({ params: { id } }: SearchParamProps) => {
@@ -20,9 +21,30 @@ const Document = async ({ params: { id } }: SearchParamProps) => {
     redirect("/");
   }
 
+  const userIds = Object.keys(room.usersAccesses);
+  const users = await getClerkUsers({ userIds });
+
+  const usersData = users.map((user: User) => ({
+    ...user,
+    userType: room.usersAccesses[user.email]?.includes("room:write")
+      ? "editor"
+      : "viewer",
+  }));
+
+  const currentUserType = room.usersAccesses[
+    clerkUser.emailAddresses[0].emailAddress
+  ]?.includes("room:write")
+    ? "editor"
+    : "viewer";
+
   return (
     <main className="flex w-full flex-col items-center">
-      <CollaborativeRoom roomId={id} roomMetadata={room.metadata} />
+      <CollaborativeRoom
+        roomId={id}
+        users={usersData}
+        roomMetadata={room.metadata}
+        currentUserType={currentUserType}
+      />
     </main>
   );
 };
