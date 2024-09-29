@@ -18,6 +18,7 @@ import {
   useEditorStatus,
 } from "@liveblocks/react-lexical";
 import Loader from "../loader";
+import Comments from "../comments";
 import FloatingToolbar from "./plugins/FloatingToolbarPlugin";
 
 // Catch any errors that occur during Lexical updates and log them
@@ -77,6 +78,7 @@ export function Editor({
           <LiveblocksPlugin>
             <FloatingComposer className="w-[350px]" />
             <FloatingThreads threads={threads} />
+            <Comments />
           </LiveblocksPlugin>
         </div>
       </div>
