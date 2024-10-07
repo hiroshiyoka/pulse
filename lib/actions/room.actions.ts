@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 
 import { liveblocks } from "@/lib/liveblocks";
 
-import { parseStringify } from "../utils";
+import { getAccessType, parseStringify } from "../utils";
 
 export const createDocument = async ({
   userId,
@@ -81,5 +81,28 @@ export const getDocuments = async (email: string) => {
     return parseStringify(rooms);
   } catch (error) {
     console.log(`Error happened while getting rooms: ${error}`);
+  }
+};
+
+export const updateDocumentsAccess = async ({
+  roomId,
+  email,
+  userType,
+  updatedBy,
+}: ShareDocumentParams) => {
+  try {
+    const usersAccesses: RoomAccesses = {
+      [email]: getAccessType(userType) as AccessType,
+    };
+
+    const room = await liveblocks.updateRoom(roomId, { usersAccesses });
+
+    if (room) {
+    }
+
+    revalidatePath(`documents/${roomId}`);
+    return parseStringify(room);
+  } catch (error) {
+    console.log(`Error happened while updating a room access: ${error}`);
   }
 };
