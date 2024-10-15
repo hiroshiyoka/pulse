@@ -6,6 +6,7 @@ import { SignedIn, UserButton } from "@clerk/nextjs";
 
 import Header from "@/components/header";
 import { dateConverter } from "@/lib/utils";
+import Notifications from "@/components/notifications";
 import { DeleteModal } from "@/components/deleteModal";
 import { getDocuments } from "@/lib/actions/room.actions";
 import AddDocumentButton from "@/components/addDocumentButton";
@@ -25,7 +26,7 @@ const Home = async () => {
     <main className="home-container">
       <Header className="sticky left-0 top-0">
         <div className="flex items-center gap-2 lg:gap-4">
-          Notification
+          <Notifications />
           <SignedIn>
             <UserButton />
           </SignedIn>
